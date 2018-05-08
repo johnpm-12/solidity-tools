@@ -30,8 +30,12 @@ var dirFunction = (dir) => {
     walk(dir, fileFunction, dirFunction);
 };
 
+console.log('Reading contracts...');
+
 // walk contracts dir
 walk('./contracts', fileFunction, dirFunction);
+
+console.log('Compiling...');
 
 // compile with optimization enabled
 var output = solc.compile({ sources: input }, 1);
