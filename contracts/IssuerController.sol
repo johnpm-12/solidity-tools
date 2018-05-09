@@ -8,35 +8,32 @@ import "./IssuedToken.sol";
 contract IssuerController is AntiERC20Sink {
 
     IssuedToken public issuedToken;
-    struct SetAndIndex {
-        bool isSet;
-        uint256 index;
-    }
-    mapping (address => SetAndIndex) public issuerInfo;
+    mapping (address => bool) public isIssuer;
+    mapping (address => uint256) private issuersIndex;
     address[] public issuers;
-    uint256 public issuerCount;
 
     constructor(IssuedToken _issuedToken) public {
         issuedToken = _issuedToken;
     }
 
     modifier issuerOnly() {
-        require(issuerInfo[msg.sender].isSet);
+        require(isIssuer[msg.sender]);
         _;
     }
 
     function addIssuer(address _issuer) public managerOnly {
-        require(!issuerInfo[_issuer].isSet);
-        issuerInfo[_issuer] = SetAndIndex({ isSet: true, index: issuers.length });
+        require(!isIssuer[_issuer]);
+        isIssuer[_issuer] = true;
+        issuersIndex[_issuer] = issuers.length;
         issuers.push(_issuer);
-        issuerCount++;
     }
 
     function deleteIssuer(address _issuer) public managerOnly {
-        require(issuerInfo[_issuer].isSet);
-        delete issuers[issuerInfo[_issuer].index];
-        delete issuerInfo[_issuer];
-        issuerCount--;
+        require(isIssuer[_issuer]);
+        delete isIssuer[_issuer];
+        issuers[issuersIndex[_issuer]] = issuers[issuers.length - 1];
+        delete issuers[issuers.length - 1];
+        issuers.length--;
     }
 
     function issue(address _to, uint256 _value) public issuerOnly {
