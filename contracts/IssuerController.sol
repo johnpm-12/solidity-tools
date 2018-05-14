@@ -1,11 +1,12 @@
 pragma solidity ^0.4.23;
 
 // simple contract that let's the manager set as many issuers as he wants for an issued token
+// the issued token must set the issuer controller as it's issuer
 
-import "./AntiERC20Sink.sol";
+import "./Managed.sol";
 import "./IssuedToken.sol";
 
-contract IssuerController is AntiERC20Sink {
+contract IssuerController is Managed {
 
     IssuedToken public issuedToken;
     mapping (address => bool) public isIssuer;

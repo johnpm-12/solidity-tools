@@ -1,11 +1,8 @@
 pragma solidity ^0.4.23;
 
-// TODO: figure out why inheriting the interface doesn't allow compiling
-// import "./ERC20Interface.sol";
-import "./AntiERC20Sink.sol";
 import "./SafeMath.sol";
 
-contract FixedSupplyToken is AntiERC20Sink {
+contract FixedSupplyToken {
 
     using SafeMath for uint256;
 

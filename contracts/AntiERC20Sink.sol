@@ -8,8 +8,6 @@ import "./ERC20Interface.sol";
 
 contract AntiERC20Sink is Managed {
 
-    constructor() public {}
-
     modifier notRequiredToken(address _token) {
         _;
     }

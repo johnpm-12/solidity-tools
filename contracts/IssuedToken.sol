@@ -1,11 +1,9 @@
 pragma solidity ^0.4.23;
 
-// TODO: figure out why inheriting the interface doesn't allow compiling
-// import "./ERC20Interface.sol";
-import "./AntiERC20Sink.sol";
+import "./Managed.sol";
 import "./SafeMath.sol";
 
-contract IssuedToken is AntiERC20Sink {
+contract IssuedToken is Managed {
 
     using SafeMath for uint256;
 
@@ -36,19 +34,14 @@ contract IssuedToken is AntiERC20Sink {
         _;
     }
 
-    modifier notZeroAddress(address _to) {
-        require(_to != 0x0);
-        _;
-    }
-
-    function transfer(address _to, uint256 _value) public notZeroAddress(_to) returns (bool) {
+    function transfer(address _to, uint256 _value) public returns (bool) {
         balanceOf[msg.sender] = balanceOf[msg.sender].minus(_value);
         balanceOf[_to] = balanceOf[_to].plus(_value);
         emit Transfer(msg.sender, _to, _value);
         return true;
     }
 
-    function transferFrom(address _from, address _to, uint256 _value) public notZeroAddress(_to) returns (bool) {
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool) {
         balanceOf[_from] = balanceOf[_from].minus(_value);
         balanceOf[_to] = balanceOf[_to].plus(_value);
         emit Transfer(_from, _to, _value);
